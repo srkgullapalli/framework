@@ -15,6 +15,11 @@ public class LoginPageSteps extends PageObjectManager {
 		testContext = context;
 	}
 	
+	@Given("^Launch Application with URL$")
+	public void launchBrowser() throws Exception{
+		((LoginPage)getDynamicPageObj(PageObjects.LoginPage.toString())).launchApp();
+	}
+	
 	@Given("^User is in LoginPage and performs login with below fields$")
 	public void login(DataTable table) throws Exception{
 		((LoginPage)getDynamicPageObj(PageObjects.LoginPage.toString())).appLogin(table);

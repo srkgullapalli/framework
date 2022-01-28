@@ -3,11 +3,18 @@
  */
 package selenium;
 
+import static managers.DriverManager.getDriver;
+
+import org.openqa.selenium.OutputType;
 import org.openqa.selenium.StaleElementReferenceException;
+import org.openqa.selenium.TakesScreenshot;
+import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.remote.Augmenter;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
+import cucumber.api.Scenario;
 import managers.DriverManager;
 
 /**
@@ -38,6 +45,16 @@ public class SeleniumHelper extends DriverManager {
 			e.printStackTrace();
 		}
 		
+	}
+	
+	/**
+	 * Takes Screenshot
+	 */
+	public static void getScreenshot(Scenario scenario) {
+		String screenshotName = scenario.getName().replaceAll(" ", "_");
+		WebDriver augementedDriver = new Augmenter().augment(getDriver());
+		scenario.embed(((TakesScreenshot) augementedDriver).getScreenshotAs(OutputType.BYTES),
+				 screenshotName + ".png");
 	}
 	
 }

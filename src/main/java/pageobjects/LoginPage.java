@@ -45,10 +45,7 @@ public class LoginPage {
 
 	public void appLogin(DataTable table)  {
 		final Map<String, String> hmap = table.asMap(String.class, String.class);
-		String appUrl = FileReaderManager.getInstance().getConfigReader().getApplicationUrl();
-
-		loginPageDriver.get(appUrl);
-		waitForAngularRequestToFinish();
+	
 		btn_Login.click();
 		waitForAngularRequestToFinish();
 		text_Email.sendKeys(hmap.get("UserName"));
@@ -63,6 +60,13 @@ public class LoginPage {
 		btn_Profile.click();
 		waitForAngularRequestToFinish();
 		btn_Logout.click();
+		
+	}
+
+	public void launchApp() {
+		String appUrl = FileReaderManager.getInstance().getConfigReader().getApplicationUrl();
+		loginPageDriver.get(appUrl);
+		waitForAngularRequestToFinish();
 		
 	}
 }

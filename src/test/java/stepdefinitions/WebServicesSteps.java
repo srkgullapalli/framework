@@ -3,11 +3,10 @@ package stepdefinitions;
 import cucumber.TestContext;
 import cucumber.api.DataTable;
 import cucumber.api.java.en.Given;
-import enums.PageObjects;
 import managers.PageObjectManager;
-import pageobjects.LoginPage;
+import static webservices.WebServiceHelper.*;
 
-public class WebServicesSteps extends PageObjectManager {
+public class WebServicesSteps {
 	
 	TestContext testContext;
 	
@@ -15,6 +14,10 @@ public class WebServicesSteps extends PageObjectManager {
 		testContext = context;
 	}
 	
-	
-	
+	@Given("^Generate the Auth Token with following request \"([^\"]*)\"$")
+		public void generateAuthToken(String msgPath,DataTable table ) {
+		String res = triggerWebService(msgPath,table);
+		TestContext.setApiResponse(res);
+		System.out.print("API Response"+TestContext.getApiResponse());
+	}
 } 

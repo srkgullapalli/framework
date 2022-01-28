@@ -12,6 +12,8 @@ import org.openqa.selenium.OutputType;
 import org.openqa.selenium.TakesScreenshot;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.remote.Augmenter;
+import static selenium.SeleniumHelper.*;
+import com.cucumber.listener.Reporter;
 
 public class Hooks {
 
@@ -26,18 +28,13 @@ public class Hooks {
 	public void setup(Scenario scenario) {
 		currentScenario = scenario;
 		currentScenario.write("IDAM Automation Script Execution");
-		getDriver();
 	}
 
-	@After
-	public void tearDown() {
-		if (getDriver() != null) {
+	@After(order = 0)
+	public void AfterSteps() {
 			if (currentScenario.isFailed()) {
-				WebDriver augementedDriver = new Augmenter().augment(getDriver());
-				currentScenario.embed(((TakesScreenshot) augementedDriver).getScreenshotAs(OutputType.BYTES),
-						"image/png");
+				getScreenshot(currentScenario);
 			}
-		}
 		DriverManager.quitDriver();
 	}
 }
