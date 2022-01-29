@@ -72,6 +72,11 @@
 			<artifactId>rest-assured</artifactId>
 			<version>4.5.0</version>
 		</dependency>
+		<dependency>
+			<groupId>org.json</groupId>
+			<artifactId>json</artifactId>
+			<version>20211205</version>
+		</dependency>
 	</dependencies>
 	<build>
 		<plugins>

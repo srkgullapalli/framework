@@ -4,10 +4,14 @@
 Feature: IDAM Application REST Services Test
   I want to use this template for my feature file
 
-  @API
-  Scenario: To test GetALL Events API
+  Background: User generates authorisation token
     Given Generate the Auth Token with following request "src\test\resources\testdata\AuthToken.json"
-      | Service Protocol | REST                                               |
-      | EndPoint         | https://identity-test.hostcountry.qa/api/authorize |
-      | Content Type     | application/json                                   |
-      | HTTP Method      | Post                                               |
+      | endPoint   | /api/authorize |
+      | httpMethod | Post           |
+
+  @API
+  Scenario: Authorized user is able to fetch GetEvents data
+    Then Trigger the API with authToken and requestbody ""
+      | endPoint         | /api/events |
+      | httpMethod       | Get         |
+      | restrictedAccess | False       |

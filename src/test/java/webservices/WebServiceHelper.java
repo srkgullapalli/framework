@@ -3,13 +3,20 @@
  */
 package webservices;
 
+import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.HashMap;
 import java.util.Map;
-import static io.restassured.RestAssured.given;
+
+import org.junit.Assert;
+
+import cucumber.TestContext;
 import cucumber.api.DataTable;
+import io.restassured.RestAssured;
+import io.restassured.response.Response;
+import io.restassured.response.ResponseBody;
+import io.restassured.specification.RequestSpecification;
 
 /**
  * @author Siva Rama Krishna Gullapalli
@@ -20,45 +27,50 @@ public class WebServiceHelper {
 	/**
 	 * This is method is used to trigger WebServices Either SOAP or REST
 	 */
-	public static String triggerWebService(String msgBody, DataTable table) {
-		String serviceResponse = null;
+	private static final String baseURL = "https://identity-test.hostcountry.qa";
+	private static Response response;
+	private static String jsonString;
 
-		final Map<String, String> inputParamMap = table.asMap(String.class, String.class);
+	public static String triggerWebService(String filePath, DataTable table, TestContext context) {
+		final Map<String, String> inputMap = table.asMap(String.class, String.class);
 
-		String serviceProtocol = inputParamMap.get("Service Protocol").trim();
-		String endPoint = inputParamMap.get("EndPoint").trim();
-		String contentType = inputParamMap.get("Content Type").trim();
-		String httpMethod = inputParamMap.get("HTTP Method").trim();
-		String requestBody = generateStringFromRes(msgBody);
+		String httpMethod = inputMap.get("httpMethod") != null ? inputMap.get("httpMethod").trim() : "";
+		String endPoint = inputMap.get("endPoint") != null ? inputMap.get("endPoint").trim() : "";
 
-		// Set headers for request
-		HashMap<String, String> headerMap = new HashMap<String, String>();
-		if (serviceProtocol.equalsIgnoreCase("SOAP")) {
-			String soapAction = inputParamMap.get("SOAP Action").trim();
-			headerMap.put("Content-Type", contentType);
-			headerMap.put("SOAPAction", soapAction);
-		} else {
-			headerMap.put("Content-Type", contentType);
-		}
+		String authToken = context.getaccessToken() != null ? context.getaccessToken().trim() : "";
+		String restrictedAccess = inputMap.get("restrictedAccess") != null ? inputMap.get("restrictedAccess").trim()
+				: "";
+		String requestBody = new File(filePath).exists() ? generateStringFromRes(filePath) : "";
+
+		RestAssured.baseURI = baseURL;
+		RequestSpecification request = RestAssured.given();
+
+		request.headers("Content-Type", "application/json", "Authorization", authToken, "restrictAccess",
+				restrictedAccess);
+
 		switch (httpMethod) {
 		case "Get":
-			serviceResponse = given().log().all().headers(headerMap).body(requestBody).get(endPoint).andReturn()
-					.asString();
+			response = request.log().all().get(endPoint);
 			break;
 		case "Post":
-			serviceResponse = given().log().all().headers(headerMap).body(requestBody).post(endPoint).andReturn()
-					.asString();
+			response = request.log().all().body(requestBody).post(endPoint);
 			break;
 		case "Delete":
-			serviceResponse = given().log().all().headers(headerMap).body(requestBody).delete(endPoint).andReturn()
-					.asString();
+			response = request.log().all().body(requestBody).delete(endPoint);
 			break;
 		case "Put":
-			serviceResponse = given().log().all().headers(headerMap).body(requestBody).put(endPoint).andReturn()
-					.asString();
+			response = request.log().all().body(requestBody).put(endPoint);
 			break;
 		}
-		return serviceResponse;
+
+		@SuppressWarnings("rawtypes")
+		ResponseBody body = response.getBody();
+		jsonString = body.asPrettyString();
+		System.out.println("Service Response is====>" + jsonString);
+
+		System.out.println("######################Completed WebService Cal#####################");
+		return jsonString;
+
 	}
 
 	private static String generateStringFromRes(String path) {
@@ -67,10 +79,8 @@ public class WebServiceHelper {
 		try {
 			requestBody = new String(Files.readAllBytes(Paths.get(path)));
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-
 		return requestBody;
 	}
 
