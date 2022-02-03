@@ -100,5 +100,11 @@ public class ConfigFileReader {
 		if(reportConfigPath!= null) return reportConfigPath;
 		else throw new RuntimeException("Report Config Path not specified in the Configuration.properties file for the Key:reportConfigPath");		
 	}
+	
+	public String getScreenshotsPath(){
+		String reportConfigPath = properties.getProperty("screenshotsPath");
+		if(reportConfigPath!= null) return reportConfigPath;
+		else throw new RuntimeException("ScreenShots Path not specified in the Configuration.properties file for the Key:reportConfigPath");		
+	}
 
 }

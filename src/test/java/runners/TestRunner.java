@@ -14,6 +14,7 @@ import managers.FileReaderManager;
 		glue= {"stepdefinitions"},
 		plugin = { "com.cucumber.listener.ExtentCucumberFormatter:target/cucumber-reports/report.html"},
 		monochrome = true,
+		dryRun=true,
 		tags = {"@SmokeTest,@Login"}
 		)
 public class TestRunner {

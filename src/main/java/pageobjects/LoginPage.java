@@ -44,23 +44,21 @@ public class LoginPage {
 	
 
 	public void appLogin(DataTable table)  {
-		final Map<String, String> hmap = table.asMap(String.class, String.class);
-	
-		btn_Login.click();
+		final Map<String, String> hmap = table.asMap(String.class, String.class);	
+		clickElement(btn_Login);
 		waitForAngularRequestToFinish();
-		text_Email.sendKeys(hmap.get("UserName"));
+		enterTextIntoTextBox(text_Email, hmap.get("UserName"));
 		text_Password.sendKeys(hmap.get("Password"));
-		btn_Singin.click();
+		clickElement(btn_Singin);
 		waitForAngularRequestToFinish();
 
 	}
 
 	public void appLogout() {
 		waitForAngularRequestToFinish();
-		btn_Profile.click();
+		clickElement(btn_Profile);
 		waitForAngularRequestToFinish();
-		btn_Logout.click();
-		
+		clickElement(btn_Logout);		
 	}
 
 	public void launchApp() {

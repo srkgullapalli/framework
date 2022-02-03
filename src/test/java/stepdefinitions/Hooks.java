@@ -5,15 +5,9 @@ import cucumber.api.Scenario;
 import cucumber.api.java.After;
 import cucumber.api.java.Before;
 import managers.DriverManager;
-
+import selenium.TestResult;
 import static managers.DriverManager.getDriver;
-
-import org.openqa.selenium.OutputType;
-import org.openqa.selenium.TakesScreenshot;
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.remote.Augmenter;
 import static selenium.SeleniumHelper.*;
-import com.cucumber.listener.Reporter;
 
 public class Hooks {
 
@@ -33,7 +27,7 @@ public class Hooks {
 	@After(order = 0)
 	public void AfterSteps() {
 			if (currentScenario.isFailed()) {
-				getScreenshot(currentScenario);
+				takeScreenshot(getDriver(), TestResult.EXCEPTION, "failed_screencast");
 			}
 		DriverManager.quitDriver();
 	}

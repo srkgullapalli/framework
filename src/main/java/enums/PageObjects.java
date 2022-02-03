@@ -9,7 +9,9 @@ package enums;
  */
 public enum PageObjects {
 	LoginPage,
-	HomePage,
+	DashboardPage,
+	UserPage,
+	AddUserPage,
 	TicketsPage
 
 }
