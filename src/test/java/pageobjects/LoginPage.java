@@ -1,16 +1,16 @@
 package pageobjects;
 
-import java.util.Map;
-
+import io.cucumber.datatable.DataTable;
+import managers.FileReaderManager;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
-import static managers.DriverManager.*;
-import static selenium.SeleniumHelper.*;
 
-import cucumber.api.DataTable;
-import managers.FileReaderManager;
+import java.util.Map;
+
+import static managers.DriverManager.getDriver;
+import static selenium.SeleniumHelper.*;
 
 public class LoginPage {
 	private WebDriver loginPageDriver;

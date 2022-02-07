@@ -3,6 +3,7 @@ package managers;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.time.Duration;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
@@ -53,9 +54,7 @@ public class DriverManager {
 
 	private static WebDriver createRemoteDriver() {
 		driverType = FileReaderManager.getInstance().getConfigReader().getBrowser();
-		
-		System.out.println("Areyyyyyyyyyyyyy%%%%%%%%%%%%%%%%%%%%%555");
-		
+
 		String sauceUser ="gkrish90";
 		String sauceKey = "742fa4ca-9dfa-4279-8228-6a4ef1186ed1";
 		
@@ -70,8 +69,11 @@ public class DriverManager {
          
          ChromeOptions chromOpts = new  ChromeOptions();
          chromOpts.setExperimentalOption("w3c", true);
-   
-         DesiredCapabilities caps = new DesiredCapabilities();
+		chromOpts.setExperimentalOption("excludeSwitches", Collections.singletonList("enable-automation"));
+		chromOpts.setExperimentalOption("useAutomationExtension", false);
+
+
+		DesiredCapabilities caps = new DesiredCapabilities();
          caps.setCapability(ChromeOptions.CAPABILITY, chromOpts);
          caps.setCapability("sauce:options", chromOpts);
          caps.setCapability("browserName", "chrome");
@@ -116,8 +118,8 @@ public class DriverManager {
 		}
 		driver.manage().window().setSize(new Dimension(1920, 1080));
 		driver.manage().window().maximize();
-		driver.manage().timeouts().pageLoadTimeout(Duration.ofSeconds(60));
-    	driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(20));
+		driver.manage().timeouts().implicitlyWait(60, TimeUnit.SECONDS);
+
 		return driver;
 	}
 

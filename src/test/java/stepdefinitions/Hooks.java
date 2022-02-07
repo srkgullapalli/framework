@@ -1,9 +1,10 @@
 package stepdefinitions;
 
-import cucumber.TestContext;
-import cucumber.api.Scenario;
-import cucumber.api.java.After;
-import cucumber.api.java.Before;
+import io.cucumber.java.After;
+import io.cucumber.java.Before;
+import io.cucumber.java.Scenario;
+import model.TestContext;
+
 import managers.DriverManager;
 import selenium.TestResult;
 import static managers.DriverManager.getDriver;
@@ -21,7 +22,7 @@ public class Hooks {
 	@Before
 	public void setup(Scenario scenario) {
 		currentScenario = scenario;
-		currentScenario.write("IDAM Automation Script Execution");
+	//	currentScenario.write("IDAM Automation Script Execution");
 	}
 
 	@After(order = 0)

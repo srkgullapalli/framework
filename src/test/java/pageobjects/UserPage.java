@@ -12,7 +12,8 @@ import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
 import com.paulhammant.ngwebdriver.ByAngularButtonText;
-import cucumber.api.DataTable;
+import io.cucumber.datatable.DataTable;
+import selenium.TestResult;
 
 public class UserPage {
 	private WebDriver userPageDriver;
@@ -49,13 +50,13 @@ public class UserPage {
 	@FindBy(id ="datej")
 	private WebElement date_Expiry;
 	
-	@FindBy(id="userType")
+	@FindBy(xpath="//mat-select[@id='userType']//div[contains(@id,'mat-select')]/span")
 	private WebElement select_userType;
 	
-	@FindBy(xpath="//span[contains(.,'Select Document Type')]")
+	@FindBy(xpath="//mat-select[@id='idType']//div[contains(@id,'mat-select')]/span")
 	private WebElement select_IdType;
 	
-	@FindBy(id="gender")
+	@FindBy(xpath="//mat-select[@id='gender']//div[contains(@id,'mat-select')]/span")
 	private WebElement select_Gender;
 	
 	@FindBy(id="documentId")
@@ -105,15 +106,45 @@ public class UserPage {
 	
 	@FindBy(xpath="//span[contains(.,'Select Nationality')]")
 	private WebElement select_Nationality;
+
+	private WebElement getElementByXpath(String xpath){
+		return getDriver().findElement(By.xpath(xpath));
+	}
+
+	private WebElement getElementByCss(String css){
+		return getDriver().findElement(By.cssSelector(css));
+	}
 	
 	public void createUsers(DataTable table) {
 		waitForElementToBeLoaded(btn_AddUser);
 		clickElement(btn_AddUser);
 		waitForAngularRequestToFinish();
+
+
+		getElementByCss("svg.mat-datepicker-toggle-default-icon.ng-star-inserted > path").click();
+		getElementByXpath("//mat-calendar[contains(@id,'mat-datepicker')]/mat-calendar-header//button/span/div").click();
+		getElementByXpath("//mat-calendar[contains(@id,'mat-datepicker')]//mat-multi-year-view/table//td[contains(.,'1982')]").click();
+		getElementByXpath("//mat-calendar[contains(@id,'mat-datepicker')]//td[contains(.,'MAR')]").click();
+		getElementByXpath("//mat-calendar[contains(@id,'mat-datepicker')]//td[contains(.,'20')]").click();
+
+		selectOptionFromSelectBox(select_IdType,"Qatar ID");
+		waitForAngularRequestToFinish();
+		selectOptionFromSelectBox(select_userType,"Staff");
+		waitForAngularRequestToFinish();
+		selectOptionFromSelectBox(select_Gender,"Male");
+		waitForAngularRequestToFinish();
+
+		enterTextIntoTextBox(input_FirstName, "Test");
+		waitInSeconds(10);
+		takeScreenshot(getDriver(), TestResult.EXCEPTION, "Date_Screenshot");
+
+
+		//selectOptionFromSelectBox(select_IdType, "Passport Number");
+		/*
 		enterTextIntoTextBox(input_FirstName, "Test");
 		enterTextIntoTextBox(input_LastName, "Auto");
 		enterTextIntoTextBox(input_Email, "test@gmail.com");
-        selectDateByJS(date_Dob, "02-Feb-1981");
+
         enterTextIntoTextBox(input_DocumentID, "9876543212");
         
        selectOptionFromSelectBox(select_IdType, "Passport Number");
@@ -149,6 +180,6 @@ public class UserPage {
 		
         //clickElement(btn_AddUser);
 
-		
+		*/
 	}
 }

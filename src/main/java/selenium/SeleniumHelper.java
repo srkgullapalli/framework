@@ -5,6 +5,7 @@ package selenium;
 
 import java.io.File;
 import java.time.Duration;
+import java.util.concurrent.TimeUnit;
 
 import org.apache.commons.io.FileUtils;
 import org.junit.Assert;
@@ -42,7 +43,7 @@ public class SeleniumHelper extends DriverManager {
 	}
 
 	public static void waitForElementToBeLoaded(WebElement webElement) {
-		WebDriverWait webDriverWait = new WebDriverWait(getDriver(), Duration.ofSeconds(waitForSeconds));
+		WebDriverWait webDriverWait = new WebDriverWait(getDriver(), waitForSeconds);
 		webDriverWait.until(ExpectedConditions.or(
 				ExpectedConditions.elementToBeClickable(webElement),
 				ExpectedConditions.elementToBeSelected(webElement)
@@ -68,16 +69,12 @@ public class SeleniumHelper extends DriverManager {
 	}
 
 	public static void selectOptionFromSelectBox(WebElement selectBox, String selection) {
-		Actions builder = new Actions(getDriver());
-
 		try {
 			waitForAngularRequestToFinish();
 			clickElement(selectBox);
 			waitInSeconds(10);
-			WebElement option = getDriver().findElement(By.xpath("//span[contains(.,'" + selection.trim() + "')]"));
-			Action mouseHoverClick = builder.click(option).build();
-			mouseHoverClick.perform();
-			waitInSeconds(10);
+			WebElement option = getDriver().findElement(By.xpath("//mat-option[@value='"+selection+"']/span"));
+			clickElement(option);
 		} catch (Exception e) {
 			takeScreenshot(getDriver(), TestResult.EXCEPTION, "failed_screencast");
 		}
@@ -114,7 +111,11 @@ public class SeleniumHelper extends DriverManager {
 
 	public static void selectDateByJS(WebElement ele, String dateValue) {
 		JavascriptExecutor js = ((JavascriptExecutor) getDriver());
-		js.executeScript("arguments[0].setAttribute('value','" + dateValue + "');", ele);
+		js.executeScript("arguments[0].removeAttribute('readonly')", ele);
+		waitInSeconds(5);
+		waitForAngularRequestToFinish();
+		WebElement newElement = getDriver().findElement(By.id("datei"));
+		js.executeScript("arguments[0].setAttribute('value','02-Feb-1981')", ele);
 
 	}
 }

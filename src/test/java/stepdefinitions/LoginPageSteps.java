@@ -1,8 +1,9 @@
 package stepdefinitions;
 
-import cucumber.TestContext;
-import cucumber.api.DataTable;
-import cucumber.api.java.en.Given;
+import model.TestContext;
+import io.cucumber.java.en.Given;
+import io.cucumber.java.en.Then;
+import io.cucumber.datatable.DataTable;
 import enums.PageObjects;
 import managers.PageObjectManager;
 import pageobjects.LoginPage;
