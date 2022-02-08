@@ -2,8 +2,12 @@ package pageobjects;
 
 import static managers.DriverManager.getDriver;
 import static selenium.SeleniumHelper.*;
+
+import java.awt.*;
 import java.util.Map;
 
+import com.thoughtworks.selenium.SeleneseTestCase;
+import com.thoughtworks.selenium.webdriven.WebDriverBackedSelenium;
 import org.openqa.selenium.By;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebDriver;
@@ -15,7 +19,7 @@ import com.paulhammant.ngwebdriver.ByAngularButtonText;
 import io.cucumber.datatable.DataTable;
 import selenium.TestResult;
 
-public class UserPage {
+public class UserPage extends SeleneseTestCase {
 	private WebDriver userPageDriver;
 	private String currentScreenName;
 	private String envName;
@@ -34,6 +38,9 @@ public class UserPage {
 
 	@ByAngularButtonText.FindBy(buttonText = "Add User")
 	private WebElement btn_AddUser;
+
+	@FindBy(xpath ="//button[contains(.,'Create User')]")
+	private WebElement btn_CreateUser;
 	
 	@FindBy(id="firstName")
 	private WebElement input_FirstName;
@@ -43,17 +50,11 @@ public class UserPage {
 	
 	@FindBy(id="email")
 	private WebElement input_Email;
-	
-	@FindBy(id ="datei")
-	private WebElement date_Dob;
-	
-	@FindBy(id ="datej")
-	private WebElement date_Expiry;
-	
+
 	@FindBy(xpath="//mat-select[@id='userType']//div[contains(@id,'mat-select')]/span")
 	private WebElement select_userType;
 	
-	@FindBy(xpath="//mat-select[@id='idType']//div[contains(@id,'mat-select')]/span")
+	@FindBy(xpath="//span[contains(.,'Select Document Type')]")
 	private WebElement select_IdType;
 	
 	@FindBy(xpath="//mat-select[@id='gender']//div[contains(@id,'mat-select')]/span")
@@ -62,13 +63,13 @@ public class UserPage {
 	@FindBy(id="documentId")
 	private WebElement input_DocumentID;
 	
-	@FindBy(id="dialcode")
+	@FindBy(xpath="//mat-select[@id='dialcode']//span[contains(.,'Select Country Code')]")
 	private WebElement select_dialcode;
 	
 	@FindBy(id="phone")
 	private WebElement input_Phone;
 	
-	@FindBy(xpath="//mat-select[@id='mat-select-16']")
+	@FindBy(xpath="//mat-label[contains(.,'Role Group')]")
 	private WebElement select_RoleGroup;
 	 
 	@FindBy(id="title")
@@ -83,7 +84,7 @@ public class UserPage {
 	@FindBy(id="info")
 	private WebElement input_SupervisorName;
 	
-	@FindBy(id="dialcodei")
+	@FindBy(xpath="//mat-select[@id='dialcodei']//span[contains(.,'Select Country Code')]")
 	private WebElement select_SupDialCode;
 	
 	@FindBy(id="otherMobile")
@@ -107,6 +108,27 @@ public class UserPage {
 	@FindBy(xpath="//span[contains(.,'Select Nationality')]")
 	private WebElement select_Nationality;
 
+	@FindBy(xpath="//button[contains(@class,'toggle')]")
+	private WebElement toggle;
+
+	@FindBy(xpath="//img[contains(@src,'avatars')]")
+	private WebElement avatar;
+
+	@FindBy(xpath="//span[@class='mat-option-text' and contains(.,'+91')]")
+	private WebElement option_PhnIndia;
+
+	@FindBy(xpath="//span[@class='mat-option-text' and contains(.,' test ')]")
+	private WebElement option_Role;
+
+	@FindBy(xpath="//mat-option[contains(@value,'Qatar ID')]/span")
+	private WebElement option_Qatar;
+
+	@FindBy(xpath="//span[@class='mat-option-text' and contains(.,'🇮🇳 India')]")
+	private WebElement option_NationIndia;
+
+	@FindBy(xpath="//mat-label[contains(.,'Date Of Birth')]/ancestor::mat-form-field//button")
+	private WebElement calenderBtn1;
+
 	private WebElement getElementByXpath(String xpath){
 		return getDriver().findElement(By.xpath(xpath));
 	}
@@ -115,71 +137,62 @@ public class UserPage {
 		return getDriver().findElement(By.cssSelector(css));
 	}
 	
-	public void createUsers(DataTable table) {
+	public void createUsers() throws AWTException {
 		waitForElementToBeLoaded(btn_AddUser);
 		clickElement(btn_AddUser);
 		waitForAngularRequestToFinish();
+		enterTextIntoTextBox(input_FirstName, "Test");
+		enterTextIntoTextBox(input_LastName, "Auto");
+		enterTextIntoTextBox(input_Email, "test@gmail.com");
+		waitInSeconds(2000);
 
-
-		getElementByCss("svg.mat-datepicker-toggle-default-icon.ng-star-inserted > path").click();
+		clickElement_JS(calenderBtn1);
+		waitInSeconds(1000);
 		getElementByXpath("//mat-calendar[contains(@id,'mat-datepicker')]/mat-calendar-header//button/span/div").click();
 		getElementByXpath("//mat-calendar[contains(@id,'mat-datepicker')]//mat-multi-year-view/table//td[contains(.,'1982')]").click();
 		getElementByXpath("//mat-calendar[contains(@id,'mat-datepicker')]//td[contains(.,'MAR')]").click();
 		getElementByXpath("//mat-calendar[contains(@id,'mat-datepicker')]//td[contains(.,'20')]").click();
-
-		selectOptionFromSelectBox(select_IdType,"Qatar ID");
-		waitForAngularRequestToFinish();
+		waitInSeconds(2000);
 		selectOptionFromSelectBox(select_userType,"Staff");
 		waitForAngularRequestToFinish();
 		selectOptionFromSelectBox(select_Gender,"Male");
 		waitForAngularRequestToFinish();
 
-		enterTextIntoTextBox(input_FirstName, "Test");
-		waitInSeconds(10);
-		takeScreenshot(getDriver(), TestResult.EXCEPTION, "Date_Screenshot");
+		scrollDown(userPageDriver);
+		enterTextIntoTextBox(input_DocumentID, "9876543212");
+		waitInSeconds(1000);
+		selectOptionFromDropDown(select_IdType,option_Qatar);
+		waitForAngularRequestToFinish();
 
-
-		//selectOptionFromSelectBox(select_IdType, "Passport Number");
-		/*
-		enterTextIntoTextBox(input_FirstName, "Test");
-		enterTextIntoTextBox(input_LastName, "Auto");
-		enterTextIntoTextBox(input_Email, "test@gmail.com");
-
-        enterTextIntoTextBox(input_DocumentID, "9876543212");
-        
-       selectOptionFromSelectBox(select_IdType, "Passport Number");
-       
-       
-        selectOptionFromSelectBox(select_userType, "Staff");
-        selectOptionFromSelectBox(select_Gender, "Male");
-        waitInSeconds(5);
-        Actions at = new Actions(userPageDriver);
-        at.sendKeys(Keys.PAGE_DOWN).build().perform();
-        
-        selectOptionFromSelectBox(select_dialcode, "🇮🇳 India+91");
+		selectOptionFromDropDown(select_dialcode,option_PhnIndia);
 		enterTextIntoTextBox(input_Phone, "9676098748");
-        selectOptionFromSelectBox(select_RoleGroup, "test34");
+		waitInSeconds(2000);
+		selectOptionFromDropDown(select_RoleGroup,option_Role);
+
 		enterTextIntoTextBox(input_JobTitle, "QA Test");
 		enterTextIntoTextBox(input_Justification, "AutomationScript");
 		enterTextIntoTextBox(input_Employer, "Botnotch");
 		enterTextIntoTextBox(input_SupervisorName, "Automation");
-        waitInSeconds(5);
+		takeScreenshot(getDriver(), TestResult.EXCEPTION, "Date_Screenshot");
 
-        selectOptionFromSelectBox(select_SupDialCode, "🇮🇳 India+91");
+		waitInSeconds(3000);
+		selectOptionFromDropDown(select_SupDialCode,option_PhnIndia);
 		enterTextIntoTextBox(input_SupervisorMobile, "9247783959");
 		enterTextIntoTextBox(input_OtherMail, "test@live.com");
 		enterTextIntoTextBox(input_ProjectName, "Automation");
-        selectDateByJS(date_Expiry, "15-Dec-2022");
+
+		getElementByXpath("//mat-label[contains(.,'Access Expiry Date')]/ancestor::mat-form-field//button").click();
+		waitInSeconds(1000);
+		getElementByXpath("//mat-calendar[contains(@id,'mat-datepicker')]/mat-calendar-header//button/span/div").click();
+		getElementByXpath("//mat-calendar[contains(@id,'mat-datepicker')]//mat-multi-year-view/table//td[contains(.,'2022')]").click();
+		getElementByXpath("//mat-calendar[contains(@id,'mat-datepicker')]//td[contains(.,'MAR')]").click();
+		getElementByXpath("//mat-calendar[contains(@id,'mat-datepicker')]//td[contains(.,'20')]").click();
+
 		enterTextIntoTextBox(input_Tag, "Auto");
 		enterTextIntoTextBox(input_TicketID, "56784");
-        waitInSeconds(5);
-
-        selectDateByJS(select_Nationality, "🇮🇳 India");
-        
-			waitInSeconds(30);
-		
-        //clickElement(btn_AddUser);
-
-		*/
+		selectOptionFromDropDown(select_Nationality,option_NationIndia);
+        clickElement_JS(btn_CreateUser);
+		takeScreenshot(getDriver(), TestResult.EXCEPTION, "Date_Screenshot");
+		waitForAngularRequestToFinish();
 	}
 }

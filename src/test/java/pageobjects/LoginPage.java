@@ -35,7 +35,7 @@ public class LoginPage {
 	@FindBy(id = "next")
 	private WebElement btn_Singin;
 	
-	@FindBy(xpath = "//div[contains(@class,'profile-pic')]")
+	@FindBy(xpath = "//idams-toolbar-user//div[contains(.,'Administrator Botnotch')]")
 	private WebElement btn_Profile;
 
 	@FindBy(xpath = "//span[contains(.,'Logout')]")

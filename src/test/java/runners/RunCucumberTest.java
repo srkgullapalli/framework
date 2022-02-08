@@ -18,7 +18,7 @@ import managers.FileReaderManager;
 		dryRun=true,
 		tags = "@SmokeTest and @Login"
 		)
-public class TestRunner {
+public class RunCucumberTest {
 	
 	@AfterClass
 	public static void writeExtentReport() {

@@ -3,18 +3,15 @@
  */
 package selenium;
 
+import java.awt.*;
+import java.awt.event.KeyEvent;
 import java.io.File;
 import java.time.Duration;
 import java.util.concurrent.TimeUnit;
 
 import org.apache.commons.io.FileUtils;
 import org.junit.Assert;
-import org.openqa.selenium.By;
-import org.openqa.selenium.JavascriptExecutor;
-import org.openqa.selenium.OutputType;
-import org.openqa.selenium.TakesScreenshot;
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebElement;
+import org.openqa.selenium.*;
 import org.openqa.selenium.interactions.Action;
 import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.ui.ExpectedConditions;
@@ -68,13 +65,36 @@ public class SeleniumHelper extends DriverManager {
 		}
 	}
 
+	public static void clickElement_JS(WebElement element) {
+		try {
+			waitForElementToBeLoaded(element);
+			JavascriptExecutor js = (JavascriptExecutor) getDriver();
+			js.executeScript("arguments[0].click();", element);
+		} catch (Exception e) {
+			takeScreenshot(getDriver(), TestResult.EXCEPTION, "failed_screencast");
+		}
+	}
+
 	public static void selectOptionFromSelectBox(WebElement selectBox, String selection) {
 		try {
 			waitForAngularRequestToFinish();
 			clickElement(selectBox);
-			waitInSeconds(10);
-			WebElement option = getDriver().findElement(By.xpath("//mat-option[@value='"+selection+"']/span"));
+			waitInSeconds(2000);
+			WebElement option = getDriver().findElement(By.xpath("//mat-option[contains(@value,'"+selection+"')]/span"));
 			clickElement(option);
+			waitInSeconds(1000);
+		} catch (Exception e) {
+			takeScreenshot(getDriver(), TestResult.EXCEPTION, "failed_screencast");
+		}
+	}
+
+	public static void selectOptionFromDropDown(WebElement parent,WebElement option) {
+		try {
+			waitForAngularRequestToFinish();
+			clickElement_JS(parent);
+			waitInSeconds(2000);
+			clickElement_JS(option);
+			waitInSeconds(1000);
 		} catch (Exception e) {
 			takeScreenshot(getDriver(), TestResult.EXCEPTION, "failed_screencast");
 		}
@@ -93,9 +113,15 @@ public class SeleniumHelper extends DriverManager {
 		}
 	}
 
-	public static void waitInSeconds(int seconds) {
+	public static void scrollDown(WebDriver driver){
+		Actions at = new Actions(driver);
+		at.sendKeys(Keys.PAGE_DOWN).build().perform();
+		at.sendKeys(Keys.PAGE_DOWN).build().perform();
+	}
+
+	public static void waitInSeconds(int milliseconds) {
 		try {
-			Thread.sleep(seconds);
+			Thread.sleep(milliseconds);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -118,4 +144,17 @@ public class SeleniumHelper extends DriverManager {
 		js.executeScript("arguments[0].setAttribute('value','02-Feb-1981')", ele);
 
 	}
+
+	public static void zoomOut() throws AWTException {
+		Robot robot = new Robot();
+		for (int i = 0; i < 4; i++) {
+			robot.keyPress(KeyEvent.VK_CONTROL);
+			robot.keyPress(KeyEvent.VK_SUBTRACT);
+			robot.keyRelease(KeyEvent.VK_SUBTRACT);
+			robot.keyRelease(KeyEvent.VK_CONTROL);
+		}
+	}
+
+
+
 }

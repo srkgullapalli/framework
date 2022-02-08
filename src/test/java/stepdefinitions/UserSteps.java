@@ -8,6 +8,8 @@ import enums.PageObjects;
 import managers.PageObjectManager;
 import pageobjects.UserPage;
 
+import java.awt.*;
+
 public class UserSteps extends PageObjectManager {
 	
 	TestContext testContext;
@@ -17,7 +19,7 @@ public class UserSteps extends PageObjectManager {
 	}
 	
 	@Given("^Create new user with the below fields$")
-	public void selectIDAMService(DataTable table){
-		((UserPage)getDynamicPageObj(PageObjects.UserPage.toString())).createUsers(table);
+	public void selectIDAMService() throws AWTException {
+		((UserPage)getDynamicPageObj(PageObjects.UserPage.toString())).createUsers();
 	}
 } 
