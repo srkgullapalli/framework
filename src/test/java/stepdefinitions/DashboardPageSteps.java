@@ -20,4 +20,9 @@ public class DashboardPageSteps extends PageObjectManager {
 	public void createUser(DataTable table){
 		((DashboardPage)getDynamicPageObj(PageObjects.DashboardPage.toString())).selectService(table);
 	}
-} 
+
+	@Then("Select sub service for main service selection")
+	public void selectSubServiceForMainServiceSelection(DataTable table) {
+		((DashboardPage)getDynamicPageObj(PageObjects.DashboardPage.toString())).selectSubService(table);
+	}
+}

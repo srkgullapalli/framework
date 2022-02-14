@@ -1,8 +1,8 @@
-Feature: Automated End2End Tests
-  Description: The purpose of this feature is to test End 2 End IDAM Application.
+Feature: Dry Run
+  Description: Smoke Test
 
   @Login
-  Scenario: Verify Whether the Dashboard is displayed when users logs in with valid credentials
+  Scenario: Verify Whether a new user can be created in IDAM Application with valid credentials
     Given Launch Application with URL
     Then User is in LoginPage and performs login with below fields
       | UserName | admin@botnotch.com |
@@ -10,5 +10,7 @@ Feature: Automated End2End Tests
     Then Select the service from the below menu options
       | service    | IDAM  |
       | subService | Users |
-    Then Create new user with the below fields
+    Then Inject data into testContext
+    Then verify user created is displayed in search results for user
     Then Logout of the Application
+

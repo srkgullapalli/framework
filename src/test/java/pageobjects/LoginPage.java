@@ -1,5 +1,6 @@
 package pageobjects;
 
+import com.paulhammant.ngwebdriver.ByAngularButtonText;
 import io.cucumber.datatable.DataTable;
 import managers.FileReaderManager;
 import org.openqa.selenium.WebDriver;
@@ -35,36 +36,44 @@ public class LoginPage {
 	@FindBy(id = "next")
 	private WebElement btn_Singin;
 	
-	@FindBy(xpath = "//idams-toolbar-user//div[contains(.,'Administrator Botnotch')]")
+	@FindBy(xpath = "//idams-toolbar-user/div")
 	private WebElement btn_Profile;
 
-	@FindBy(xpath = "//span[contains(.,'Logout')]")
+	@ByAngularButtonText.FindBy(buttonText = "Logout")
 	private WebElement btn_Logout;
 
-	
+	@ByAngularButtonText.FindBy(buttonText = "Yes")
+	private WebElement confirm_Yes;
 
 	public void appLogin(DataTable table)  {
-		final Map<String, String> hmap = table.asMap(String.class, String.class);	
+		final Map<String, String> hmap = table.asMap(String.class, String.class);
+
 		clickElement(btn_Login);
 		waitForAngularRequestToFinish();
 		enterTextIntoTextBox(text_Email, hmap.get("UserName"));
-		text_Password.sendKeys(hmap.get("Password"));
+		enterTextIntoTextBox(text_Password, hmap.get("Password"));
 		clickElement(btn_Singin);
 		waitForAngularRequestToFinish();
-
 	}
 
 	public void appLogout() {
-		waitForAngularRequestToFinish();
-		clickElement(btn_Profile);
-		waitForAngularRequestToFinish();
-		clickElement(btn_Logout);		
+		waitForElementToBeLoaded(btn_Profile);
+		clickElement_JS(btn_Profile);
+		waitForElementToBeLoaded(btn_Logout);
+		clickElement_JS(btn_Logout);
+		clickElement(confirm_Yes);
 	}
 
-	public void launchApp() {
+	public void launchApp(DataTable table) {
+		final Map<String, String> hmap = table.asMap(String.class, String.class);
 		String appUrl = FileReaderManager.getInstance().getConfigReader().getApplicationUrl();
-		loginPageDriver.get(appUrl);
+
+		if(hmap.get("launchMode").equalsIgnoreCase("Incognito")) {
+		   getIncognitoDriver().get(appUrl);
+		}
+		else {
+			getDriver().get(appUrl);
+		}
 		waitForAngularRequestToFinish();
-		
 	}
 }

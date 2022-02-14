@@ -13,49 +13,50 @@ import static selenium.SeleniumHelper.clickElement;
 import static selenium.SeleniumHelper.waitForAngularRequestToFinish;
 
 public class DashboardPage {
-	private WebDriver dashboardPageDriver;
-	private String currentScreenName;
-	private String envName;
+    private WebDriver dashboardPageDriver;
+    private String currentScreenName;
+    private String envName;
 
-	public DashboardPage() {
-		currentScreenName = this.getClass().getName();
-		this.dashboardPageDriver = getDriver();
-		PageFactory.initElements(dashboardPageDriver, this);
-	}
+    @FindBy(xpath = "//span[contains(.,'IDAM')]")
+    private WebElement label_IDAM;
 
-	@FindBy(xpath = "//span[contains(.,'IDAM')]")
-	private WebElement label_IDAM;
+    @FindBy(xpath = "//span[text()='Users']")
+    private WebElement label_Users;
 
-	@FindBy(xpath = "//span[text()='Users']")
-	private WebElement label_Users;
+	@FindBy(xpath = "//span[text()='Pending Approvals']")
+	private WebElement label_PendingApprovals;
 
-	
-	public void selectService(DataTable table) {
-		final Map<String, String> input = table.asMap(String.class, String.class);
-		waitForAngularRequestToFinish();
+    public DashboardPage() {
+        currentScreenName = this.getClass().getName();
+        this.dashboardPageDriver = getDriver();
+        PageFactory.initElements(dashboardPageDriver, this);
+    }
 
-		switch (input.get("service")) {
-		case "IDAM":
-			clickElement(label_IDAM);
-			selectIdamSubMenu(table);
-			break;
-		case "TicketEnablement":
-			break;
-		case "MassAccess":
-			break;
-		case "SpecialNeeds":
-			break;
-		}
-	}
+    public void selectService(DataTable table) {
+        final Map<String, String> input = table.asMap(String.class, String.class);
+        waitForAngularRequestToFinish();
+        switch (input.get("service")) {
+            case "IDAM":
+                clickElement(label_IDAM);
+                break;
+            case "TicketEnablement":
+                break;
+            case "MassAccess":
+                break;
+            case "SpecialNeeds":
+                break;
+        }
+    }
 
-	private void selectIdamSubMenu(DataTable table) {
-		final Map<String, String> input = table.asMap(String.class, String.class);
-		waitForAngularRequestToFinish();
-
-		switch (input.get("subService")) {
-		case "Users":
-			clickElement(label_Users);
-			break;
-		}
-	}
+    public void selectSubService(DataTable table) {
+        final Map<String, String> input = table.asMap(String.class, String.class);
+        switch (input.get("subService")) {
+            case "Users":
+                clickElement(label_Users);
+                break;
+            case "Pending Approvals":
+                clickElement(label_PendingApprovals);
+                break;
+        }
+    }
 }
