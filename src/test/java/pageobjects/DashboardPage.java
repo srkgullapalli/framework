@@ -26,6 +26,9 @@ public class DashboardPage {
 	@FindBy(xpath = "//span[text()='Pending Approvals']")
 	private WebElement label_PendingApprovals;
 
+    @FindBy(xpath = "//span[text()='Imports']")
+    private WebElement label_Imports;
+
     public DashboardPage() {
         currentScreenName = this.getClass().getName();
         this.dashboardPageDriver = getDriver();
@@ -56,6 +59,9 @@ public class DashboardPage {
                 break;
             case "Pending Approvals":
                 clickElement(label_PendingApprovals);
+                break;
+            case "Imports":
+                clickElement(label_Imports);
                 break;
         }
     }

@@ -56,4 +56,9 @@ public class UserSteps extends PageObjectManager {
 	public void approveOrRejectBlockAccessForUser(DataTable table) {
 		((UserPage)getDynamicPageObj(PageObjects.UserPage.toString())).approveRejectBlock(table);
 	}
+
+    @Then("Perform User import using the file {string}")
+    public void performUserImportUsingTheFile(String msgPath) {
+		((UserPage)getDynamicPageObj(PageObjects.UserPage.toString())).importUser(msgPath);
+    }
 }

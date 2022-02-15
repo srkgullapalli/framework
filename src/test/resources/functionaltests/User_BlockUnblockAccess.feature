@@ -13,7 +13,7 @@ Feature: IDAM Application Block and Unblock Users
     Then Select sub service for main service selection
       | subService | Users |
     Then Inject data into testContext
-      | phoneNo | 7931486639 |
+      | phoneNo | 9605773707 |
     Then navigate to view details screen for the user
     Then Perform Block and UnBlock Access for user
       | action        | Block        |
@@ -39,4 +39,44 @@ Feature: IDAM Application Block and Unblock Users
     Then Verify Approval Status in User Details Screen
       | approvalStatus | Block Access Approved |
       | userStatus     | Blocked               |
+    Then Logout of the Application
+
+  @Users
+  Scenario: To Test Unblock User Functionality for a Blocked User
+    Given Launch Application with URL
+      | launchMode | Normal |
+    Then User is in LoginPage and performs login with below fields
+      | UserName | admin@botnotch.com |
+      | Password | Botnotch#560040    |
+    Then Select the service from the below menu options
+      | service | IDAM |
+    Then Select sub service for main service selection
+      | subService | Users |
+    Then Inject data into testContext
+      | phoneNo | 9605773707 |
+    Then navigate to view details screen for the user
+    Then Perform Block and UnBlock Access for user
+      | action        | UnBlock     |
+      | blockComments | UnblockUser |
+    Then Verify Approval Status in User Details Screen
+      | approvalStatus | Unblock Access Pending |
+    Then Logout of the Application
+    Given Launch Application with URL
+      | launchMode | Incognito |
+    Then User is in LoginPage and performs login with below fields
+      | UserName | vasanth12@yopmail.com |
+      | Password | Admin@1234            |
+    Then Select the service from the below menu options
+      | service | IDAM |
+    Then Select sub service for main service selection
+      | subService | Pending Approvals |
+    Then navigate to view details screen for the user
+    Then Approve or Reject Block Access For User
+      | action        | approveUnBlock  |
+      | blockComments | Approve Unblock |
+    Then Select sub service for main service selection
+      | subService | Users |
+    Then Verify Approval Status in User Details Screen
+      | approvalStatus | Unblock Access Approved |
+      | userStatus     | Valid                   |
     Then Logout of the Application

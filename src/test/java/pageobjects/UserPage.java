@@ -159,6 +159,9 @@ public class UserPage extends SeleneseTestCase {
     @ByAngularButtonText.FindBy(buttonText = "Block Access")
     private WebElement btn_BlockAccess;
 
+    @ByAngularButtonText.FindBy(buttonText = "Unblock Access")
+    private WebElement btn_UnBlockAccess;
+
     @ByAngularButtonText.FindBy(buttonText = "Close")
     private WebElement btn_CloseUserScreen;
 
@@ -176,6 +179,21 @@ public class UserPage extends SeleneseTestCase {
 
     @FindBy(xpath = "//button//span[contains(.,'Approve Block')]")
     private WebElement btn_ApproveBlock;
+
+    @FindBy(xpath = "//button//span[contains(.,'Approve Unblock')]")
+    private WebElement btn_ApproveUnBlock;
+
+    @ByAngularButtonText.FindBy(buttonText = "Next")
+    private WebElement btn_Next;
+
+    @ByAngularButtonText.FindBy(buttonText = "Upload")
+    private WebElement btn_Upload;
+
+    @FindBy(xpath="//span[contains(.,'supported file formats: .xlsx .csv')]")
+    private WebElement input_UploadClick;
+
+    @FindBy(id="inputFile")
+    private WebElement input_File;
 
     public UserPage() {
         currentScreenName = this.getClass().getName();
@@ -321,7 +339,15 @@ public class UserPage extends SeleneseTestCase {
             waitForAngularRequestToFinish();
             clickElement(btn_CloseUserScreen);
         } else {
-
+            clickElement(btn_UnBlockAccess);
+            waitInSeconds(2000);
+            clickElement(confirm_Yes);
+            waitInSeconds(2000);
+            enterTextIntoTextBox(textArea_ManagerComments, hmap.get("blockComments"));
+            waitInSeconds(2000);
+            clickElement(btn_OK);
+            waitForAngularRequestToFinish();
+            clickElement(btn_CloseUserScreen);
         }
     }
 
@@ -337,8 +363,24 @@ public class UserPage extends SeleneseTestCase {
             clickElement(btn_Ok);
             waitForAngularRequestToFinish();
         }else{
-
+            scrollTillPageEnd(userPageDriver);
+            clickElement_JS(btn_ApproveUnBlock);
+            waitInSeconds(2000);
+            enterTextIntoTextBox(textArea_ApproverComments, hmap.get("blockComments"));
+            waitInSeconds(2000);
+            clickElement(btn_Ok);
+            waitForAngularRequestToFinish();
         }
+    }
 
+    public void importUser(String msgPath) {
+        waitForAngularRequestToFinish();
+        clickElement(btn_Next);
+        clickElement(input_UploadClick);
+        waitInSeconds(5000);
+        enterTextIntoTextBox(input_File,msgPath);
+        waitInSeconds(2000);
+        clickElement(btn_Upload);
+        waitForAngularRequestToFinish();
     }
 }

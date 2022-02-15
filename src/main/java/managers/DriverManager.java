@@ -3,7 +3,6 @@ package managers;
 import com.paulhammant.ngwebdriver.NgWebDriver;
 import enums.DriverType;
 import enums.PlatformType;
-import io.cucumber.datatable.DataTable;
 import io.github.bonigarcia.wdm.WebDriverManager;
 import org.openqa.selenium.*;
 import org.openqa.selenium.chrome.ChromeDriver;
@@ -80,6 +79,8 @@ public class DriverManager {
         driver.manage().window().setSize(new Dimension(1920, 1080));
         driver.manage().window().maximize();
         driver.manage().timeouts().pageLoadTimeout(30, TimeUnit.SECONDS);
+
+
         return driver;
     }
 
