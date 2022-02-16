@@ -13,6 +13,8 @@ Feature: IDAM Application User Creation Flows
     Then Select sub service for main service selection
       | subService | Users |
     Then Create new user with the below fields
+    Then perform search for user in Users screen with the following
+      | searchCriteria | phoneNo |
     Then Verify Approval Status in User Details Screen
       | approvalStatus | User Approval Pending |
       | IDAMID         | ####                  |
@@ -27,10 +29,14 @@ Feature: IDAM Application User Creation Flows
       | service | IDAM |
     Then Select sub service for main service selection
       | subService | Pending Approvals |
+    Then perform search for user in Users screen with the following
+      | searchCriteria | phoneNo |
     Then navigate to view details screen for the user
     Then Approve or Reject RequestAccess for the user
     Then Select sub service for main service selection
       | subService | Users |
+    Then perform search for user in Users screen with the following
+      | searchCriteria | phoneNo |
     Then Verify Approval Status in User Details Screen
       | approvalStatus | Roles Approved |
     Then Logout of the Application

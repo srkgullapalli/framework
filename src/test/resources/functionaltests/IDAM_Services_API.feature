@@ -23,3 +23,10 @@ Feature: IDAM Application Test Services API Endpoints
       | httpMethod | Post                   |
     Then Verify API Response for the following service
       | service | PostingService |
+
+  Scenario: To verify Authorized user is able to Post a service
+    Then Trigger the API with authToken and request-body "src\test\resources\testdata\CreateService.json"
+      | endPoint   | /api/sns_service_types |
+      | httpMethod | Post                   |
+    Then Verify API Response for the following service
+      | service | PostingService |

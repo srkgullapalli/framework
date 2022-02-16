@@ -14,6 +14,7 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 import util.ReportUtil;
 
 import java.awt.*;
+import java.awt.datatransfer.StringSelection;
 import java.awt.event.KeyEvent;
 import java.io.File;
 import java.util.Random;
@@ -168,6 +169,22 @@ public class SeleniumHelper extends DriverManager {
         }
     }
 
+    public static void fileUploadRobot(String msgPath) throws AWTException {
+        StringSelection ss = new StringSelection(msgPath);
+        Toolkit.getDefaultToolkit().getSystemClipboard().setContents(ss, null);
+
+        //imitate mouse events like ENTER, CTRL+C, CTRL+V
+        Robot robot = new Robot();
+        robot.keyPress(KeyEvent.VK_ENTER);
+        robot.keyRelease(KeyEvent.VK_ENTER);
+        robot.keyPress(KeyEvent.VK_CONTROL);
+        robot.keyPress(KeyEvent.VK_V);
+        robot.keyRelease(KeyEvent.VK_V);
+        robot.keyRelease(KeyEvent.VK_CONTROL);
+        robot.keyPress(KeyEvent.VK_ENTER);
+        robot.keyRelease(KeyEvent.VK_ENTER);
+    }
+
     public static long generateRandomNo() {
         return (long) (Math.random() * Math.pow(10, 10));
     }
@@ -176,5 +193,11 @@ public class SeleniumHelper extends DriverManager {
         Random randomGenerator = new Random();
         int randomInt = randomGenerator.nextInt(1000);
         return UUID.randomUUID().toString().substring(0, 5) + randomInt + "@gmail.com";
+    }
+
+    public static void scrollToElementActions(WebDriver driver,WebElement ele){
+        waitForElementToBeLoaded(ele);
+        Actions actions = new Actions(driver);
+        actions.moveToElement(ele).build().perform();
     }
 }

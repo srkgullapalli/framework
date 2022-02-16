@@ -12,4 +12,14 @@ Feature: IDAM Application Import User Feature
       | service | IDAM |
     Then Select sub service for main service selection
       | subService | Imports |
-    Then Perform User import using the file "src\test\resources\testdata\User_Automation.xlsx"
+    Then Inject data into testContext
+      | phoneNo | 9000448221 |
+    Then Perform User import using the file "\src\test\resources\testdata\User_Automation.xlsx"
+    Then Select sub service for main service selection
+      | subService | Users |
+    Then perform search for user in Users screen with the following
+      | searchCriteria | phoneNo |
+    Then Verify Approval Status in User Details Screen
+      | approvalStatus | Role Approval Pending |
+      | userStatus     | Valid                 |
+    Then Logout of the Application

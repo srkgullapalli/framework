@@ -18,7 +18,7 @@ public class WebServiceValidationPage {
 
         switch(inputMap.get("service")){
             case"GetAllEvents":
-                validateGetAllEvents(jsonResponse);
+                validateGetAllAPI(jsonResponse);
                 break;
             case "PostingEvent":
                 validatePostAndUpdateEvents(jsonResponse,sessionMap);
@@ -35,7 +35,9 @@ public class WebServiceValidationPage {
             case "PostService":
                 validatePostService(jsonResponse);
                 break;
-
+            case "GetAllUsers":
+                validateGetAllAPI(jsonResponse);
+                break;
         }
     }
 
@@ -89,7 +91,7 @@ public class WebServiceValidationPage {
 
     }
 
-    private static void validateGetAllEvents(String response) {
+    private static void validateGetAllAPI(String response) {
         JSONObject obj = new JSONObject(response);
         //Verify Status is OK
         Assert.assertEquals("ok",obj.getString("status"));

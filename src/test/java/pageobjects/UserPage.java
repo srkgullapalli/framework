@@ -13,9 +13,11 @@ import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
 import org.testng.Assert;
 import selenium.TestResult;
+
 import java.awt.*;
 import java.util.List;
 import java.util.Map;
+
 import static managers.DriverManager.getDriver;
 import static selenium.SeleniumHelper.*;
 
@@ -142,10 +144,10 @@ public class UserPage extends SeleneseTestCase {
     private WebElement btn_ViewDetails;
 
     @FindBy(xpath = "//mat-button-toggle[@value='Approved']//button[@name='approvalStatus']//mat-icon")
-    private List < WebElement > btn_approveOrReject;
+    private List<WebElement> btn_approveOrReject;
 
     @FindBy(xpath = "//textarea[@name='Comment']")
-    private List < WebElement > textarea_Comments;
+    private List<WebElement> textarea_Comments;
 
     @FindBy(id = "rejectBtn")
     private WebElement btn_Submit;
@@ -186,13 +188,16 @@ public class UserPage extends SeleneseTestCase {
     @ByAngularButtonText.FindBy(buttonText = "Next")
     private WebElement btn_Next;
 
+    @FindBy(xpath = "(//button[@type='submit']//span[contains(.,'Next')])[2]")
+    private WebElement btn_NextUpload;
+
     @ByAngularButtonText.FindBy(buttonText = "Upload")
     private WebElement btn_Upload;
 
-    @FindBy(xpath="//span[contains(.,'supported file formats: .xlsx .csv')]")
+    @FindBy(xpath = "//mat-icon[@id='inputFileIcon']")
     private WebElement input_UploadClick;
 
-    @FindBy(id="inputFile")
+    @FindBy(id = "inputFile")
     private WebElement input_File;
 
     public UserPage() {
@@ -271,20 +276,11 @@ public class UserPage extends SeleneseTestCase {
     }
 
     public void navigateViewDetails(TestContext testContext) {
-        searchUser_ContextWithPhn(testContext);
         clickElement_JS(btn_ActionUsers);
         waitForElementToBeLoaded(btn_ViewDetails);
         clickElement_JS(btn_ViewDetails);
         waitForAngularRequestToFinish();
         waitInSeconds(3000);
-    }
-
-    private void searchUser_ContextWithPhn(TestContext testContext) {
-        waitForElementToBeLoaded(input_SearchUser);
-        input_SearchUser.sendKeys(testContext.getUserPhoneNo());
-        input_SearchUser.sendKeys(Keys.ENTER);
-        waitInSeconds(3000);
-        waitForElementToBeLoaded(btn_ActionUsers);
     }
 
     public void approveRejectUserAccess() {
@@ -306,10 +302,8 @@ public class UserPage extends SeleneseTestCase {
     }
 
     public void verifyRoleApprovalStatus(TestContext testContext, DataTable table) {
-        final Map < String, String > hmap = table.asMap(String.class, String.class);
+        final Map<String, String> hmap = table.asMap(String.class, String.class);
         Actions act = new Actions(userPageDriver);
-        //Perform Search for the user
-        searchUser_ContextWithPhn(testContext);
 
         if (hmap.get("approvalStatus") != null) {
             waitForElementToBeLoaded(table_userApprovalStatus);
@@ -327,7 +321,7 @@ public class UserPage extends SeleneseTestCase {
     }
 
     public void blockUnBlockUser(DataTable table) {
-        final Map < String, String > hmap = table.asMap(String.class, String.class);
+        final Map<String, String> hmap = table.asMap(String.class, String.class);
         if (hmap.get("action").equalsIgnoreCase("Block")) {
             clickElement(btn_BlockAccess);
             waitInSeconds(2000);
@@ -352,7 +346,7 @@ public class UserPage extends SeleneseTestCase {
     }
 
     public void approveRejectBlock(DataTable table) {
-        final Map < String, String > hmap = table.asMap(String.class, String.class);
+        final Map<String, String> hmap = table.asMap(String.class, String.class);
 
         if (hmap.get("action").equalsIgnoreCase("approveBlock")) {
             scrollTillPageEnd(userPageDriver);
@@ -362,7 +356,7 @@ public class UserPage extends SeleneseTestCase {
             waitInSeconds(2000);
             clickElement(btn_Ok);
             waitForAngularRequestToFinish();
-        }else{
+        } else {
             scrollTillPageEnd(userPageDriver);
             clickElement_JS(btn_ApproveUnBlock);
             waitInSeconds(2000);
@@ -373,14 +367,46 @@ public class UserPage extends SeleneseTestCase {
         }
     }
 
-    public void importUser(String msgPath) {
+    public void importUser(String msgPath) throws AWTException {
+        msgPath = System.getProperty("user.dir") + msgPath;
         waitForAngularRequestToFinish();
         clickElement(btn_Next);
+
+        String winHandleBefore = userPageDriver.getWindowHandle();
         clickElement(input_UploadClick);
-        waitInSeconds(5000);
-        enterTextIntoTextBox(input_File,msgPath);
+        waitInSeconds(3000);
+        fileUploadRobot(msgPath);
+        waitForAngularRequestToFinish();
+
+        userPageDriver.switchTo().window(winHandleBefore);
+        scrollTillPageEnd(userPageDriver);
+        waitInSeconds(3000);
+
+        scrollToElementActions(userPageDriver, btn_NextUpload);
+        clickElement_JS(btn_NextUpload);
         waitInSeconds(2000);
         clickElement(btn_Upload);
         waitForAngularRequestToFinish();
+        waitInSeconds(5000);
+
+
+    }
+
+    public void searchUser(DataTable table, TestContext testContext) {
+        final Map<String, String> map = table.asMap(String.class, String.class);
+        waitForElementToBeLoaded(input_SearchUser);
+
+        switch (map.get("searchCriteria")) {
+            case "email":
+                input_SearchUser.sendKeys(testContext.getUserMailID());
+                break;
+            case "phoneNo":
+                input_SearchUser.sendKeys(testContext.getUserPhoneNo());
+                break;
+        }
+        input_SearchUser.sendKeys(Keys.ENTER);
+        waitInSeconds(3000);
+        waitForAngularRequestToFinish();
+        waitForElementToBeLoaded(btn_ActionUsers);
     }
 }

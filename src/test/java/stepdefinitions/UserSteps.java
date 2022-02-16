@@ -9,6 +9,7 @@ import managers.PageObjectManager;
 import pageobjects.UserPage;
 
 import java.awt.*;
+import java.io.IOException;
 import java.util.Map;
 
 public class UserSteps extends PageObjectManager {
@@ -27,7 +28,12 @@ public class UserSteps extends PageObjectManager {
 	@Then("Inject data into testContext")
 	public void injectDataIntoTestContext(DataTable table) {
 		final Map<String, String> hmap = table.asMap(String.class, String.class);
-		testContext.setUserPhoneNo(hmap.get("phoneNo"));
+		if(hmap.get("phoneNo")!=null) {
+			testContext.setUserPhoneNo(hmap.get("phoneNo"));
+		}
+		else if(hmap.get("userEmail")!=null){
+			testContext.setUserMailID(hmap.get("userEmail"));
+		}
 	}
 
 	@Then("navigate to view details screen for the user")
@@ -58,7 +64,12 @@ public class UserSteps extends PageObjectManager {
 	}
 
     @Then("Perform User import using the file {string}")
-    public void performUserImportUsingTheFile(String msgPath) {
+    public void performUserImportUsingTheFile(String msgPath) throws IOException, AWTException {
 		((UserPage)getDynamicPageObj(PageObjects.UserPage.toString())).importUser(msgPath);
     }
+
+	@Then("perform search for user in Users screen with the following")
+	public void performSearchForUserInUsersScreenWithTheFollowing(DataTable table) {
+		((UserPage)getDynamicPageObj(PageObjects.UserPage.toString())).searchUser(table,testContext);
+	}
 }
